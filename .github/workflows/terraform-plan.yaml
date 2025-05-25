@@ -10,6 +10,9 @@ jobs:
     outputs:
       TF_VAR_DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       TF_VAR_DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+    steps:
+      - name: echo
+        run: echo " vars collected""  
 
   Terraform_plan:
     needs: vars

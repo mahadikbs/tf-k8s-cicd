@@ -11,6 +11,9 @@ jobs:
     outputs:
       TF_VARDOCKER_USERNAME: ${{secrets.TF_VAR_DOCKER_USERNAME}}
       TF_VAR_DOCKER_PASSWORD: ${{secrets.TF_VAR_DOCKER_PASSWORD}}
+    steps:
+      - name: echo 
+        run: echo "vars collected"   
   Build_image:
     runs-on: ubuntu-latest
     steps:
