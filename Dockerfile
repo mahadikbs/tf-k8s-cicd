@@ -1,5 +1,5 @@
 # pull microk8s image
-FROM kindest/node AS base
+FROM rancher/k3s AS base
 
 #install additional dependencies
 RUN apt update && apt install -y \
