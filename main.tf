@@ -18,30 +18,35 @@ resource "aws_instance" "terraform-test" {
 
     
 
-        provisioner "file" {
-        source = "db/docker1.sh"
-        destination = "/home/ec2-user/docker-login.sh"
+    #     provisioner "file" {
+    #     source = "db/docker1.sh"
+    #     destination = "/home/ec2-user/docker-login.sh"
       
-    }
+    # }
 
     provisioner "remote-exec" {
         inline = [
-             "sudo chmod +x /home/ec2-user/install-docker.sh", 
-             "sudo chmod +x /home/ec2-user/docker-login.sh",
-             "sudo ls /home/ec2-user/"
+            "sudo yum update -y",
+            "sudo yum install -y docker.io",
+            "sudo systemctl start docker",
+            "sudo systemctl enable docker",
+            "docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",     
+            "docker pull mahadikbs/k8s-prom-grafana:latest",
+            "docker run -d -p 8080:8080 -p 9090:9090 -p 16443:16443 -p 3000:3000 --name k8s-server mahadikbs/k8s-prom-grafana:latest",
+
         ]
       
     }
 
-    provisioner "remote-exec" {
-        inline = [ 
-            "cd /home/ec2-user/",
-            "ls",
-            "sh install-docker.sh",
-            "sh docker-login.sh"
-           ]
+    # provisioner "remote-exec" {
+    #     inline = [ 
+    #         "cd /home/ec2-user/",
+    #         "ls",
+    #         "sh install-docker.sh",
+    #         "sh docker-login.sh"
+    #        ]
       
-    }    
+    # }    
 
     connection {
       type = "ssh"
