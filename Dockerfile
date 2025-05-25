@@ -1,5 +1,5 @@
 # pull microk8s image
-FROM canonical/microk8s AS base
+FROM kindest/node AS base
 
 #install additional dependencies
 RUN apt update && apt install -y \
