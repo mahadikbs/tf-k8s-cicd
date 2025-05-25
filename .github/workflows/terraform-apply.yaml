@@ -31,7 +31,7 @@ jobs:
 
       - name: Push Image to DockerHub
         run: docker tag k8s-prom-grafana myrepo/k8s-prom-grafana:latest
-      - run: docker push myrepo/k8s/prom-grafana:latest
+      - run: docker push myrepo/k8s-prom-grafana:latest
 
   terraform_plan:
     runs-on: ubuntu-latest
