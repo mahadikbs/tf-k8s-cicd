@@ -14,3 +14,15 @@ variable "key-name" {
 
   
 }
+
+variable "security-group-name" {
+  
+}
+
+variable "DOCKER_USERNAME" {
+  type = string
+}
+
+variable "DOCKER_PASSWORD" {
+  type = string
+}

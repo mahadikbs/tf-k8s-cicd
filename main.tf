@@ -17,7 +17,7 @@ resource "aws_instance" "terraform-test" {
     }
 
     provisioner "remote-exec" {
-        inline = [ 
+        scripts = [ 
             "echo '${var.DOCKER_PASSWORD}' | docker login -u '${var.DOCKER_USERNAME}' --password-stdin",
             "sudo chmod +x /home/ec2-user/install-docker.sh",
             "docker pull k8s-prom-grafana",
