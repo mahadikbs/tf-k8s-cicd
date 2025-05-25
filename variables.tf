@@ -19,11 +19,11 @@ variable "security-group-name" {
   
 }
 
-variable "docker_username" {
+variable "DOCKER_USERNAME" {
   type = string
 }
 
-variable "docker_password" {
+variable "DOCKER_PASSWORD" {
   type = string
 }
 
