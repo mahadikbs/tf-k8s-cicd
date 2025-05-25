@@ -7,5 +7,5 @@ jobs:
     uses: mahadikbs/reusable-workflows/.github/workflows/terraform-destroy.yaml@main
     with:
       environment: production
-      runner: ubuntu:latest
+      runner: ubuntu-latest
     secrets: inherit

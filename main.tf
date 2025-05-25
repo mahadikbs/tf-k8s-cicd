@@ -27,13 +27,13 @@ resource "aws_instance" "terraform-test" {
     provisioner "remote-exec" {
         inline = [
             "sudo yum update -y",
-            "sudo yum install -y docker.io",
-            "sudo systemctl start docker",
-            "sudo systemctl enable docker",
+            "sudo amazon-linux-extras install docker",
+            "sudo yum install -y docker",
+            "sudo service docker start",
+            "sudo usermod -a -G docker ec2-user",
             "docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",     
             "docker pull mahadikbs/k8s-prom-grafana:latest",
             "docker run -d -p 8080:8080 -p 9090:9090 -p 16443:16443 -p 3000:3000 --name k8s-server mahadikbs/k8s-prom-grafana:latest",
-
         ]
       
     }
