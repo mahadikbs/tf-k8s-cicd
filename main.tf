@@ -27,15 +27,16 @@ resource "aws_instance" "terraform-test" {
     provisioner "remote-exec" {
         inline = [
              "sudo chmod +x /home/ec2-user/install-docker.sh", 
-             "sudo chmod +x /home/ec2-user/docker-login.sh"
+             "sudo chmod +x /home/ec2-user/docker-login.sh",
+             "sudo ls /home/ec2-user/"
         ]
       
     }
 
     provisioner "remote-exec" {
-        scripts = [ 
-            "/home/ec2-user/install-docker.sh",
-            "/home/ec2-user/docker-login.sh"
+        inline = [ 
+            ".//home/ec2-user/install-docker.sh",
+            ".//home/ec2-user/docker-login.sh"
            ]
       
     }    
