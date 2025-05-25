@@ -1,19 +1,11 @@
 name: Terraform apply
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
     
 jobs: 
-  vars:
-    runs-on: ubuntu-latest
-    outputs:
-      TF_VARDOCKER_USERNAME: ${{secrets.TF_VAR_DOCKER_USERNAME}}
-      TF_VAR_DOCKER_PASSWORD: ${{secrets.TF_VAR_DOCKER_PASSWORD}}
-    steps:
-      - name: echo 
-        run: echo "vars collected"   
   Build_image:
     runs-on: ubuntu-latest
     steps:
@@ -41,21 +33,49 @@ jobs:
         run: docker tag k8s-prom-grafana myrepo/k8s-prom-grafana:latest
       - run: docker push myrepo/k8s/prom-grafana:latest
 
-  Terraform_apply:
-    uses: mahadikbs/reusable-workflows/.github/workflows/terraform-apply.yaml@main
-    with:
-      environment: production
-      runner: ubuntu-latest  
-      TF_VARDOCKER_USERNAME: ${{needs.vars.TF_VAR_DOCKER_USERNAME}}
-      TF_VAR_DOCKER_PASSWORD: ${{needs.vars.TF_VAR_DOCKER_PASSWORD}} 
+  terraform_plan:
+    runs-on: ubuntu-latest
+    env:
+     TF_VAR_DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+     TF_VAR_DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
 
-    secrets: 
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}  
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-      SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-      SSH_PUBLIC_KEY: ${{secrets.SSH_PUBLIC_KEY}}
-      TF_VAR_DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      TF_VAR_DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}      
+      - name: setup ssh keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          ssh-keyscan github.com >> ~/.ssh/known_hosts         
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}      
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1        
 
-  
+      - name: setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with: 
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        run: terraform init  -reconfigure
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}      
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+
+      - name: Select Terraform Workspace
+        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+
+      - name: Planned terraform changes
+        run:  terraform plan      
+
+      # - name: Apply changes to production
+      #   run:  terraform apply -auto-approve  
+      #   with:
+      #     aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}      
+      #     aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}          
