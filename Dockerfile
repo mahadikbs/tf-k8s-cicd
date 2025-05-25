@@ -1,5 +1,5 @@
 # pull microk8s image
-FROM hndy/microk8s AS base
+FROM canonical/microk8s AS base
 
 #install additional dependencies
 RUN apt update && apt install -y \
