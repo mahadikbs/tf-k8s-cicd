@@ -6,6 +6,11 @@ on:
   workflow_dispatch:
     
 jobs: 
+  vars:
+    runs-on: ubuntu-latest
+    outputs:
+      TF_VARDOCKER_USERNAME: ${{secrets.TF_VAR_DOCKER_USERNAME}}
+      TF_VAR_DOCKER_PASSWORD: ${{secrets.TF_VAR_DOCKER_PASSWORD}}
   Build_image:
     runs-on: ubuntu-latest
     steps:
@@ -37,10 +42,10 @@ jobs:
     uses: mahadikbs/reusable-workflows/.github/workflows/terraform-apply.yaml@main
     with:
       environment: production
-      runner: ubuntu-latest
-      TF_VAR_DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      TF_VAR_DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}       
-      
+      runner: ubuntu-latest  
+      TF_VARDOCKER_USERNAME: ${{needs.vars.TF_VAR_DOCKER_USERNAME}}
+      TF_VAR_DOCKER_PASSWORD: ${{needs.vars.TF_VAR_DOCKER_PASSWORD}} 
+
     secrets: 
       AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}  
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
