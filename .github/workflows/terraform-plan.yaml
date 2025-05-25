@@ -1,0 +1,13 @@
+name: Terraform plan
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Terraform_plan:
+    uses: mahadikbs/reusable-workflows/.github/workflows/terraform-plan.yaml@main      
+    with:
+      environment: test
+      runner: ubuntu-latest
+    secrets: inherit

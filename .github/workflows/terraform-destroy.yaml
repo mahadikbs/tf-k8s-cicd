@@ -1,0 +1,11 @@
+name: Terraform Destroy
+on:
+  workflow_dispatch:
+    
+jobs:
+  Terraform_plan:
+    uses: mahadikbs/reusable-workflows/.github/workflows/terraform-destroy.yaml@main
+    with:
+      environment: production
+      runner: ubuntu:latest
+    secrets: inherit
