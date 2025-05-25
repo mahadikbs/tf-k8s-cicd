@@ -36,7 +36,7 @@ resource "aws_instance" "terraform-test" {
 }
 
 resource "aws_security_group" "k8s-sg" {
-    name = var.security-group-name
+    name = k8s.sg
 
     ingress {
         from_port = 22
