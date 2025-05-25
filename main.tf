@@ -38,16 +38,6 @@ resource "aws_instance" "terraform-test" {
       
     }
 
-    # provisioner "remote-exec" {
-    #     inline = [ 
-    #         "cd /home/ec2-user/",
-    #         "ls",
-    #         "sh install-docker.sh",
-    #         "sh docker-login.sh"
-    #        ]
-      
-    # }    
-
     connection {
       type = "ssh"
       user = "ec2-user"

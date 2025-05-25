@@ -68,9 +68,6 @@ jobs:
       - name: Initialize Terraform
         run: terraform init  -reconfigure
 
-      # - name: Select Terraform Workspace
-      #   run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
-
       - name: Planned terraform changes
         run:  terraform plan      
 
