@@ -16,12 +16,24 @@ resource "aws_instance" "terraform-test" {
       
     }
 
+        provisioner "file" {
+        source = "db/docker1.sh"
+        destination = "/home/ec2-user/docker-login.sh"
+      
+    }
+
     provisioner "remote-exec" {
-        inline = [ 
-            "sudo chmod +x /home/ec2-user/install-docker.sh",
-            "docker pull k8s-prom-grafana",
-            "docker run -d -p 8080:8080 -p 9090:9090 -p 16443:16443 -p 3000:3000 --name k8s-platform k8s-prom-grafana" 
-         ]
+        inline = [
+             "sudo chmod +x /home/ec2-user/install-docker.sh", 
+             "sudo chmod +x /home/ec2-user/docker-login.sh"
+        ]
+      
+    }
+    provisioner "remote-exec" {
+        scripts = [ 
+            "sudo .//home/ec2-user/install-docker.sh",
+            "sudo .//home/ec2-user/docker-login.sh"
+           ]
       
     }
 
