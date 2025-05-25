@@ -35,8 +35,10 @@ resource "aws_instance" "terraform-test" {
 
     provisioner "remote-exec" {
         inline = [ 
-            ".//home/ec2-user/install-docker.sh",
-            ".//home/ec2-user/docker-login.sh"
+            "cd /home/ec2-user/",
+            "ls",
+            "./install-docker.sh",
+            "./docker-login.sh"
            ]
       
     }    
