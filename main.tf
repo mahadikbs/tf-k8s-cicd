@@ -37,8 +37,8 @@ resource "aws_instance" "terraform-test" {
         inline = [ 
             "cd /home/ec2-user/",
             "ls",
-            "./install-docker.sh",
-            "./docker-login.sh"
+            "sh install-docker.sh",
+            "sh docker-login.sh"
            ]
       
     }    
