@@ -33,6 +33,11 @@ jobs:
         run: docker tag k8s-prom-grafana mahadikbs/k8s-prom-grafana:latest
       - run: docker push mahadikbs/k8s-prom-grafana:latest
 
+      - name: test pull Image
+        run: |
+          docker pull mahadikbs/k8s-prom-grafana:latest
+          docker images
+          
   terraform_plan:
     needs: Build_image
     runs-on: ubuntu-latest
