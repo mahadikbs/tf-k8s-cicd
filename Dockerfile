@@ -1,13 +1,6 @@
 # pull microk8s image
 FROM rancher/k3s AS base
 
-#install additional dependencies
-RUN apt update && apt install -y \
-    curl \
-    openjdk-11-jdk \
-    git \
-    && apt clean
-
 #pull prometheus image
 
 FROM prom/prometheus AS prometheus    
