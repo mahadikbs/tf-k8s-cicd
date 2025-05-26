@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s  # How often Prometheus collects metrics
+  evaluation_interval: 15s  # How often rules are evaluated
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']  # Prometheus monitoring itself
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']  # Collect system metrics
+
+  - job_name: 'kubernetes'
+    static_configs:
+      - targets: ['kube-apiserver:8443']  # Collect Kubernetes metrics

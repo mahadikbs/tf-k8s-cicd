@@ -10,19 +10,19 @@ resource "aws_instance" "terraform-test" {
     key_name = aws_key_pair.my-k8s-key.key_name
     security_groups = [aws_security_group.k8s-sg.name]
 
-    # provisioner "file" {
-    #     source = "db/docker.sh"
-    #     destination = "/home/ec2-user/install-docker.sh"
+    provisioner "file" {
+        source = "docker-compose.yml"
+        destination = "/home/ec2-user/docker-compose.yml"
       
-    # }
+    }
 
     
 
-    #     provisioner "file" {
-    #     source = "db/docker1.sh"
-    #     destination = "/home/ec2-user/docker-login.sh"
+        provisioner "file" {
+        source = "prometheus.yml"
+        destination = "/home/ec2-user/prometheus.yml"
       
-    # }
+    }
 
     provisioner "remote-exec" {
         inline = [
@@ -36,15 +36,15 @@ resource "aws_instance" "terraform-test" {
     }
 
     provisioner "local-exec" {
-        command = "echo Pullling images"     
+        command = "echo Pulling images"     
       
     }
 
     provisioner "remote-exec" {
         inline = [ 
+            "newgrp docker",
             "docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",     
-            "docker pull mahadikbs/k8s-prom-grafana",
-            "docker run -d -p 8080:8080 -p 9090:9090 -p 16443:16443 -p 3000:3000 --name k8s-server mahadikbs/k8s-prom-grafana:latest",
+            "docker-compose up -d",
          ]
       
     }
