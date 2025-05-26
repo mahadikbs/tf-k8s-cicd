@@ -43,8 +43,11 @@ resource "aws_instance" "terraform-test" {
     provisioner "remote-exec" {
         inline = [ 
             "newgrp docker",
-            "docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",     
-            "docker-compose up -d",
+            # "docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",   
+            "sudo yum update -y",
+            "sudo yum install docker-compose-plugin -y",
+            "cd /home/ec2-user",
+            "docker-compose up -d"
          ]
       
     }
