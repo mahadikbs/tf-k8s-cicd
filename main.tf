@@ -45,12 +45,21 @@ resource "aws_instance" "terraform-test" {
 
     user_data = <<EOF
     #!/bin/bash
-    chmod +x /home/ec2-user/*
-    /home/ec2-user/install-docker.sh
-    /home/ec2-user/install-kubectl.sh
+    sudo chmod +x /home/ec2-user/home/ec2-user/install-docker.sh
+    sudo chmod +x /home/ec2-user/install-kubectl.sh
+    sudo sh /home/ec2-user/install-docker.sh
+    sudo sh /home/ec2-user/install-kubectl.sh
    
      EOF    
 
+    provisioner "remote-exec" {
+        inline = [ 
+            "sudo service docker start",
+            "cd /home/ec2/user",
+            "docker-compose up -d"
+         ]
+      
+    }
 }
 
 resource "aws_security_group" "k8s-sg" {
