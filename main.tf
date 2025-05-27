@@ -45,19 +45,25 @@ resource "aws_instance" "terraform-test" {
 
     user_data = <<EOF
     #!/bin/bash
-    sudo chmod +x /home/ec2-user/home/ec2-user/install-docker.sh
-    sudo chmod +x /home/ec2-user/install-kubectl.sh
-    sudo sh /home/ec2-user/install-docker.sh
-    sudo sh /home/ec2-user/install-kubectl.sh
-   
+    sudo yum update -y
+    sudo amazon-linux-extras install docker
+    sudo yum install -y docker
+    sudo service docker start
+    sudo usermod -a -G docker ec2-user
+    newgrp docker
+    docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'
+    sudo yum update -y
+    sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+       
      EOF    
 
     provisioner "remote-exec" {
         inline = [ 
             "sudo service docker start",
             "cd /home/ec2-user",
-            # "docker-compose up -d",
-            "sudo sh install-kubectl.sh"
+            "sudo sh install-kubectl.sh",
+            "docker-compose up -d"
          ]
       
     }
