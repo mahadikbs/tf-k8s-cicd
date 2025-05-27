@@ -43,7 +43,7 @@ resource "aws_instance" "terraform-test" {
       host = self.public_ip
     }
 
-    user_data = <<EOF
+    user_data = <<-EOF
     #!/bin/bash
     sudo yum update -y
     sudo amazon-linux-extras install docker
@@ -57,15 +57,18 @@ resource "aws_instance" "terraform-test" {
     sudo chmod +x /usr/local/bin/docker-compose
     cd /home/ec2-user
     docker-compose up -d   
-     EOF    
+    EOF    
 
     provisioner "remote-exec" {
         inline = [ 
-            "sudo service docker start",
             "cd /home/ec2-user",
             "sudo sh install-kubectl.sh"
          ]
       
+    }
+
+    tags = {
+      Name = "tf-k8s-1012434"
     }
 }
 
