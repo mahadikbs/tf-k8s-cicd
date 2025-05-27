@@ -10,13 +10,12 @@ resource "aws_instance" "terraform-test" {
     key_name = aws_key_pair.my-k8s-key.key_name
     security_groups = [aws_security_group.k8s-sg.name]
 
+
     provisioner "file" {
         source = "docker-compose.yml"
         destination = "/home/ec2-user/docker-compose.yml"
       
     }
-
-    
 
         provisioner "file" {
         source = "prometheus.yml"
@@ -24,41 +23,33 @@ resource "aws_instance" "terraform-test" {
       
     }
 
-    provisioner "remote-exec" {
-        inline = [
-            "sudo yum update -y",
-            "sudo amazon-linux-extras install docker",
-            "sudo yum install -y docker",
-            "sudo service docker start",
-            "sudo usermod -a -G docker ec2-user"
-        ]
-      
-    }
 
-    provisioner "local-exec" {
-        command = "echo Pulling images"     
-      
+        provisioner "file" {
+            source = "db/install-docker.sh"
+            destination = "/home/ec2-user/"
+          
     }
-
-    provisioner "remote-exec" {
-        inline = [ 
-            #"docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'",   
-            "sudo yum update -y",
-            "sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose",
-            "sudo chmod +x /usr/local/bin/docker-compose",
-            "cd /home/ec2-user",
-            "sudo newgrp docker",
-            "docker-compose up -d"
-         ]
+        provisioner "file" {
+            source = "db/install-kubectl.sh"
+            destination = "/home/ec2-user/"
+          
+        }
       
-    }
-
+      
     connection {
       type = "ssh"
       user = "ec2-user"
       private_key = file("~/.ssh/id_rsa")
       host = self.public_ip
     }
+
+    user_data = <<EOF
+    #!/bin/bash
+    chmod +x /home/ec2-user/*
+    /home/ec2-user/install-docker.sh
+    /home/ec2-user/install-kubectl.sh
+   
+     EOF    
 
 }
 
