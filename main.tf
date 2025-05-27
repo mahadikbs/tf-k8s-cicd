@@ -54,15 +54,14 @@ resource "aws_instance" "terraform-test" {
     docker login -u '${var.DOCKER_USERNAME}' --password '${var.DOCKER_PASSWORD}'
     sudo yum update -y
     sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    cd /home/ec2-user
-    docker-compose up -d   
+    sudo chmod +x /usr/local/bin/docker-compose  
     EOF    
 
     provisioner "remote-exec" {
         inline = [ 
             "cd /home/ec2-user",
-            "sudo sh install-kubectl.sh"
+            "sudo sh install-kubectl.sh",
+            "sudo docker-compose up -d"
          ]
       
     }
