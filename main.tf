@@ -26,12 +26,12 @@ resource "aws_instance" "terraform-test" {
 
         provisioner "file" {
             source = "db/install-docker.sh"
-            destination = "/home/ec2-user/"
+            destination = "/home/ec2-user/install-docker.sh"
           
     }
         provisioner "file" {
             source = "db/install-kubectl.sh"
-            destination = "/home/ec2-user/"
+            destination = "/home/ec2-user/install-kubectl.sh"
           
         }
       
