@@ -61,6 +61,8 @@ resource "aws_instance" "terraform-test" {
         inline = [ 
             "cd /home/ec2-user",
             "sudo sh install-kubectl.sh",
+            "sleep 60",
+            "sleep 60",
             "sudo docker-compose up -d"
          ]
       
