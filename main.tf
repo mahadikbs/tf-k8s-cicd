@@ -55,8 +55,9 @@ resource "aws_instance" "terraform-test" {
     provisioner "remote-exec" {
         inline = [ 
             "sudo service docker start",
-            "cd /home/ec2/user",
-            "docker-compose up -d"
+            "cd /home/ec2-user",
+            # "docker-compose up -d",
+            "sudo sh install-kubectl.sh"
          ]
       
     }
