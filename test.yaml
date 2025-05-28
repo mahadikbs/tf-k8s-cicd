@@ -5,7 +5,7 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['${minikube_ip}:9090']  # Prometheus monitoring itself
+      - targets: [':9090']  # Prometheus monitoring itself
 
   - job_name: 'node_exporter'
     static_configs:

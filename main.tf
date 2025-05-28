@@ -35,7 +35,18 @@ resource "aws_instance" "terraform-test" {
           
         }
       
-      
+        provisioner "file" {
+            source = "db/install-minikube.sh"
+            destination = "/home/ec2-user/install-minikube.sh"
+          
+        }
+
+        provisioner "file" {
+            source = "db/jenkins.sh"
+            destination = "/home/ec2-user/install-jenkins.sh"
+          
+        }        
+
     connection {
       type = "ssh"
       user = "ec2-user"
@@ -60,7 +71,9 @@ resource "aws_instance" "terraform-test" {
     provisioner "remote-exec" {
         inline = [ 
             "cd /home/ec2-user",
+            "sudo chmod +x *",
             "sudo sh install-kubectl.sh",
+            "sudo sh install-jenkins.sh",
             "sleep 60",
             "sleep 60",
             "sudo docker-compose up -d"

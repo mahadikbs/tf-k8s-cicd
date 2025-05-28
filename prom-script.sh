@@ -1,0 +1,1 @@
+sudo minikube_ip=$(minikube ip) | sed -i "s|\${minikube_ip}|$minikube_ip|g" test.yaml

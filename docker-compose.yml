@@ -1,34 +1,33 @@
-version: "3.3"
+version: "3"
 
 services:
-  minikube:
-    image: moonswitch/minikube-alpine
+  openshift:
+    image: openshift/origin-pod
     privileged: true  # Allows Minikube to run inside a container
     ports:
-      - "16443:16443"
       - "8443:8443"
 
-  prometheus:
-    image: prom/prometheus
-    restart: always
-    ports:
-      - "9090:9090" 
+#   prometheus:
+#     image: prom/prometheus
+#     restart: always
+#     ports:
+#       - "9090:9090" 
 
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
+#     volumes:
+#       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+#     command:
+#       - --config.file=/etc/prometheus/prometheus.yml
 
-  grafana:
-    image: grafana/grafana
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana-storage:/var/lib/grafana
+#   grafana:
+#     image: grafana/grafana
+#     restart: always
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - GF_SECURITY_ADMIN_PASSWORD=admin
+#     volumes:
+#       - grafana-storage:/var/lib/grafana
 
-volumes:
-  grafana-storage:
+# volumes:
+#   grafana-storage:
 
